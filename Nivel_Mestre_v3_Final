@@ -1,0 +1,123 @@
+#include <stdio.h>
+#include <string.h>
+/* Dev_Tiago Santos do Carmo - todos os direitos reservados
+// Atualizado em: 16/05/2025
+// Email: tiagotechn@gmail.com
+==============================================================================================================
+// Atualização: V3.1 N Mestre_final
+ //Sem estruturas de repetição ou decisão (como for, if, etc).
+
+ //Cálculo da densidade e PIB per capita com precisão.
+
+ //Variáveis com nomes descritivos e comentários claros.
+ Descrição: Este commit adiciona duas novas funcionalidades ao programa Super Trunfo de cidades:
+V2.1 Aventureiro	Linear	Simples	
+V3.1 Final  Mestre	struct	Avançados
+Cálculo da densidade populacional (população / área)
+
+Cálculo do PIB per capita ((PIB * 1.000.000.000) / população)
+ 
+ 
+ 
+ */
+                                             
+
+// [NOVO] Estrutura para armazenar todos os dados de uma carta
+typedef struct {
+    char estado;
+    char codigo[5];
+    char cidade[50];
+    unsigned long int populacao; // [MODIFICADO] Agora é unsigned long int
+    float area;
+    float pib;
+    int pontosTuristicos;
+    float densidadePopulacional; // [NOVO]
+    float pibPerCapita;          // [NOVO]
+    float superPoder;            // [NOVO]
+} Carta;
+
+// [NOVO] Calcula os atributos derivados da carta
+void calcularAtributos(Carta* c) {
+    c->densidadePopulacional = c->populacao / c->area;
+    c->pibPerCapita = (c->pib * 1e9) / c->populacao;
+
+    // [NOVO] Super Poder é a soma de todos os atributos + 1/densidade
+    c->superPoder =
+        c->populacao +
+        c->area +
+        c->pib +
+        c->pontosTuristicos +
+        (1.0f / c->densidadePopulacional) +
+        c->pibPerCapita;
+}
+
+// [NOVO] Lê os dados de entrada de uma carta
+void lerCarta(Carta* c, int numero) {
+    printf("\nDigite os dados da carta %d:\n", numero);
+    printf("Estado (letra de A a H): ");
+    scanf(" %c", &c->estado);
+
+    printf("Código da carta (ex: A01): ");
+    scanf("%s", c->codigo);
+
+    printf("Nome da cidade: ");
+    scanf(" %[^\n]%*c", c->cidade);
+
+    printf("População: ");
+    scanf("%lu", &c->populacao); // [MODIFICADO] long int
+
+    printf("Área (em km²): ");
+    scanf("%f", &c->area);
+
+    printf("PIB (em bilhões): ");
+    scanf("%f", &c->pib);
+
+    printf("Número de pontos turísticos: ");
+    scanf("%d", &c->pontosTuristicos);
+}
+
+// [NOVO] Compara dois valores e retorna 1 se o primeiro vencer
+int compararMaior(float v1, float v2) {
+    return (v1 > v2) ? 1 : 0;
+}
+
+// [NOVO] Compara dois valores e retorna 1 se o primeiro for menor
+int compararMenor(float v1, float v2) {
+    return (v1 < v2) ? 1 : 0;
+}
+
+// [NOVO] Mostra o vencedor de cada atributo entre duas cartas
+void mostrarResultado(Carta c1, Carta c2) {
+    printf("\n===== RESULTADO DA COMPARAÇÃO =====\n");
+
+    printf("População: %s\n", (c1.populacao > c2.populacao) ? "Carta 1 venceu" : "Carta 2 venceu");
+    printf("Área: %s\n", compararMaior(c1.area, c2.area) ? "Carta 1 venceu" : "Carta 2 venceu");
+    printf("PIB: %s\n", compararMaior(c1.pib, c2.pib) ? "Carta 1 venceu" : "Carta 2 venceu");
+    printf("Pontos Turísticos: %s\n", (c1.pontosTuristicos > c2.pontosTuristicos) ? "Carta 1 venceu" : "Carta 2 venceu");
+    printf("Densidade Populacional: %s\n", compararMenor(c1.densidadePopulacional, c2.densidadePopulacional) ? "Carta 1 venceu" : "Carta 2 venceu");
+    printf("PIB per Capita: %s\n", compararMaior(c1.pibPerCapita, c2.pibPerCapita) ? "Carta 1 venceu" : "Carta 2 venceu");
+    printf("Super Poder: %s\n", compararMaior(c1.superPoder, c2.superPoder) ? "Carta 1 venceu" : "Carta 2 venceu");
+
+    // [NOVO] Exibe valores de Super Poder
+    printf("\n===== Super Poder =====\n");
+    printf("Carta 1: %.2f\n", c1.superPoder);
+    printf("Carta 2: %.2f\n", c2.superPoder);
+}
+
+// [MODIFICADO] Função principal agora organiza tudo em funções
+int main() {
+    Carta carta1, carta2;
+
+    // [MODIFICADO] Agora usamos funções para organizar a entrada
+    lerCarta(&carta1, 1);
+    lerCarta(&carta2, 2);
+
+    // [NOVO] Cálculo dos atributos derivados
+    calcularAtributos(&carta1);
+    calcularAtributos(&carta2);
+
+    // [NOVO] Exibição dos vencedores e super poderes
+    mostrarResultado(carta1, carta2);
+
+    return 0;
+}
